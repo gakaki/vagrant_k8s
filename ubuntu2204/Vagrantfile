@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby 
+# Ubuntu 22.04 aliyun mirror
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "ubuntu/jammy64"
+    
+    config.vm.network "private_network", ip: "10.0.20.2"
+
+    config.vm.synced_folder ".", "/vagrant"
+    config.vm.provision "shell", inline: "cp /vagrant/trojan-client.json /etc/trojan-client.json"
+    config.vm.provision "shell", inline: "cp /vagrant/trojan.service /etc/systemd/system/trojan.service"
+
+    # permission problem https://stackoverflow.com/questions/54067192/vagrant-config-vm-provision-does-not-allow-me-to-copy-a-file-to-etc-nginx-conf
+    # config.vm.provision "file", source: "./trojan-client.json", destination: "/etc/trojan-client.json"
+    # config.vm.provision "file", source: "./trojan.service", destination: "/etc/systemd/system/trojan.service"
+
+    config.vm.provision "shell", path: "common.sh"
+
+
+    # config.ssh.username = 'root'
+    # config.ssh.password = 'root'
+    # config.ssh.insert_key = 'true'
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = 4096
+        vb.cpus = 2
+        vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    end
+
+    # config.ssh.username = 'root'
+    # config.ssh.password = 'root'
+    # config.ssh.insert_key = false
+end
+

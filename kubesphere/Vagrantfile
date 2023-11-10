@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby 
+# Ubuntu 16.04, 18.04, 20.04, 22.04
+# uname -srm 查看 Linux Kernel 版
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "gakaki/ubuntu"
+
+    config.vm.network "private_network", ip: "10.0.20.4"
+    config.vm.provision "shell", path: "kubesphere.sh"
+    
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = 4096
+        vb.cpus = 2
+    end
+
+    # config.ssh.username = 'root'
+    # config.ssh.password = 'root'
+    # config.ssh.insert_key = false
+end
+
